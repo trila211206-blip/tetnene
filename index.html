@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lì Xì May Mắn 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;700&display=swap" rel="stylesheet">
+<style>
+
+#preMessage{
+    margin-top:30px;
+    font-size:24px;
+    color:gold;
+    text-shadow:0 0 10px orange;
+    min-height:60px;
+    opacity:0;
+    transform:translateX(-80px);
+    transition: all 1s ease;
+}
+
+body{
+    margin:0;
+    font-family:'Be Vietnam Pro', sans-serif;
+    background: radial-gradient(circle,#cc0000,#800000);
+    text-align:center;
+    color:gold;
+    overflow:hidden;
+}
+
+h1{
+    margin-top:30px;
+    font-size:42px;
+    text-shadow:0 0 20px gold;
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:30px;
+    margin-top:40px;
+}
+
+.envelope{
+    width:140px;
+    height:200px;
+    background:linear-gradient(145deg,#ff0000,#990000);
+    border-radius:15px;
+    cursor:pointer;
+    font-size:60px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:0.4s;
+    box-shadow:0 10px 25px rgba(0,0,0,0.5);
+}
+
+.envelope:hover{
+    transform:scale(1.1) rotate(5deg);
+}
+
+/* Popup */
+.popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    visibility:hidden;
+    opacity:0;
+    transition:0.4s;
+}
+
+.popup.active{
+    visibility:visible;
+    opacity:1;
+}
+
+.popup-content{
+    background:linear-gradient(145deg,#ffcc00,#ff9900);
+    color:#800000;
+    padding:40px;
+    border-radius:20px;
+    text-align:center;
+    animation:pop 0.5s ease;
+}
+
+@keyframes pop{
+    0%{transform:scale(0)}
+    100%{transform:scale(1)}
+}
+
+.close-btn{
+    margin-top:20px;
+    padding:10px 20px;
+    border:none;
+    background:#800000;
+    color:white;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+/* Hoa rơi */
+.flower{
+    position:fixed;
+    top:-20px;
+    font-size:24px;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    to{
+        transform:translateY(110vh) rotate(360deg);
+    }
+}
+
+/* Nút nhạc */
+.music-btn{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:gold;
+    border:none;
+    padding:10px 15px;
+    border-radius:20px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🧧 LÌ XÌ MAY MẮN 2026 🧧</h1>
+<p>Chạm vào bao lì xì để nhận quà 🎁</p>
+
+<div id="preMessage" style="
+margin-top:30px;
+font-size:22px;
+color:gold;
+text-shadow:0 0 10px orange;
+min-height:60px;
+transition:0.5s;
+">
+💖 Thỏ ơi, trước khi mở lì xì hãy đọc vài lời từ Trila nhé...
+</div>
+
+<button id="startBtn" disabled style="
+margin-top:20px;
+padding:12px 30px;
+font-size:18px;
+border:none;
+border-radius:25px;
+background:gray;
+color:white;
+cursor:not-allowed;
+transition:0.3s;
+">
+🧧 Mở Lì Xì 🧧
+</button>
+
+<div class="container" id="container"></div>
+
+<!-- Popup -->
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <h2 id="rewardText"></h2>
+    <p id="wishText"></p>
+    <button class="close-btn" onclick="closePopup()">Đóng</button>
+  </div>
+</div>
+
+<!-- Nhạc Tết (đổi link nếu muốn bài khác) -->
+<!-- Nhạc nền bình thường -->
+<audio id="bgMusic" loop>
+  <source src="bg.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="winMusic">
+  <source src="win.mp3" type="audio/mpeg">
+</audio>    
+
+<button class="music-btn" onclick="toggleMusic()">🔊 Nhạc</button>
+
+<script>
+const jackpotReward = {
+    gift:"🏆✨ CHÚC MỪNG THỎ ĐÃ TRÚNG GIẢI ĐỘC ĐẮC CỦA NĂM NAY ✨🏆<br><br>1 CON DAO EVORI DREAMWINGS TRONG BUNDLE RUN IT BACK + 520K",
+    wish:"💎 Thỏ chính là người may mắn nhất năm nay!!! 💎",
+};
+
+const container = document.getElementById("container");
+let opened = false;
+
+for(let i=0;i<8;i++){
+    let div = document.createElement("div");
+    div.className="envelope";
+    div.innerHTML="🧧";
+
+    div.onclick=function(){
+        if(opened) return;
+        opened = true;
+
+        openPopup(jackpotReward);
+
+        document.querySelectorAll(".envelope").forEach(env=>{
+            env.style.pointerEvents="none";
+            env.style.opacity="0.5";
+        });
+
+        this.style.opacity="1";
+        this.style.transform="scale(1.3)";
+    }
+
+    container.appendChild(div);
+}
+
+function openPopup(data){
+    const popup = document.getElementById("popup");
+    const rewardText = document.getElementById("rewardText");
+    const wishText = document.getElementById("wishText");
+
+    rewardText.innerHTML = data.gift;
+    wishText.innerHTML = data.wish + 
+        "<br><br><span style='font-size:20px;color:#ff1493;font-weight:bold;text-shadow:0 0 10px pink;'>💖 Trila yêu Thỏ nhiều lắm 💖</span>";
+
+    rewardText.style.fontSize="26px";
+    rewardText.style.color="#ff0000";
+    rewardText.style.textShadow="0 0 20px gold, 0 0 40px yellow, 0 0 60px orange";
+
+    startFireworks();
+    megaFireworks();
+    shakeScreen();
+
+    // 🎵 Đổi nhạc khi trúng
+    let bg = document.getElementById("bgMusic");
+    let win = document.getElementById("winMusic");
+
+    // Không pause nhạc nền nữa
+    win.currentTime = 0;
+    win.play().catch(()=>{});
+
+    popup.classList.add("active");
+}
+
+
+function closePopup(){
+    document.getElementById("popup").classList.remove("active");
+}
+
+function toggleMusic(){
+    let music=document.getElementById("bgMusic");
+    if(music.paused){
+        music.play();
+    }else{
+        music.pause();
+    }
+}
+
+/* Hoa rơi */
+function createFlower(){
+    let flower=document.createElement("div");
+    flower.className="flower";
+    flower.innerHTML=Math.random()>0.5?"🌸":"🌼";
+    flower.style.left=Math.random()*100+"vw";
+    flower.style.animationDuration=(3+Math.random()*5)+"s";
+    document.body.appendChild(flower);
+    setTimeout(()=>flower.remove(),8000);
+}
+setInterval(createFlower,400);
+
+/* Pháo hoa thường */
+function startFireworks(){
+    for(let i=0;i<100;i++){
+        let fw=document.createElement("div");
+        fw.style.position="fixed";
+        fw.style.width="6px";
+        fw.style.height="6px";
+        fw.style.background="gold";
+        fw.style.borderRadius="50%";
+        fw.style.left=Math.random()*100+"vw";
+        fw.style.top=Math.random()*100+"vh";
+        fw.style.boxShadow="0 0 15px yellow";
+        document.body.appendChild(fw);
+        setTimeout(()=>fw.remove(),1500);
+    }
+}
+
+/* Pháo hoa siêu cấp */
+function megaFireworks(){
+    for(let i=0;i<150;i++){
+        let spark=document.createElement("div");
+        spark.style.position="fixed";
+        spark.style.width="4px";
+        spark.style.height="4px";
+        spark.style.background="red";
+        spark.style.borderRadius="50%";
+        spark.style.left=Math.random()*100+"vw";
+        spark.style.top=Math.random()*100+"vh";
+        spark.style.boxShadow="0 0 20px gold";
+        document.body.appendChild(spark);
+        setTimeout(()=>spark.remove(),2000);
+    }
+}
+
+/* Rung màn hình */
+function shakeScreen(){
+    document.body.style.animation="shake 0.6s";
+    setTimeout(()=>document.body.style.animation="",600);
+}
+
+function enterSite(){
+    let intro = document.getElementById("introScreen");
+    let bg = document.getElementById("bgMusic");
+
+    // Phát nhạc khi bấm
+    bg.muted = false;
+    bg.play();
+
+    // Ẩn intro
+    intro.style.opacity = "0";
+    setTimeout(()=>{
+        intro.style.display = "none";
+    },500);
+}
+
+let messages = [
+"🌸 Chúc Thỏ năm mới dui dẻ và hãy luôn hạnh phúc yêu đời nhoo",
+"💖 Trila làm điều này vì Trila muốn thấy đc nụ cười hay sự hạnh phúc của người con gái mà Trila yêu",
+"✨ Và người con gái ấy chính là Thỏ",
+"💎 Trila luôn muốn gửi những điều tuyệt vời nhất đến với Thỏ",
+"Trila chúc Thỏ luốn vui vẻ và hạnh phúc, luôn gặp may mắn và thành công trong mọi việc",
+"Và đặc biệt là Trila sẽ luôn ở dây, ở bên Thỏ mỗi khi Thỏ cần ạa",
+"💌 Trila yêu Thỏ nhiều lắm ạa"
+];
+
+let index = 0;
+let preMessage = document.getElementById("preMessage");
+let startBtn = document.getElementById("startBtn");
+
+document.getElementById("container").style.pointerEvents = "none";
+document.getElementById("container").style.opacity = "0.5";
+
+function showNextMessage() {
+
+    if(index >= messages.length){
+        preMessage.innerHTML = "🎆 Giờ là lúc Thỏ có thể mở lì xì rùiii nòo 💖";
+        preMessage.style.opacity = 1;
+        preMessage.style.transform = "translateX(0)";
+
+        startBtn.disabled = false;
+        startBtn.style.background = "gold";
+        startBtn.style.color = "#b30000";
+        startBtn.style.cursor = "pointer";
+        return;
+    }
+
+    // reset
+    preMessage.style.opacity = 0;
+    preMessage.style.transform = "translateX(-80px)";
+
+    setTimeout(() => {
+        preMessage.innerHTML = messages[index];
+        preMessage.style.opacity = 1;
+        preMessage.style.transform = "translateX(0)";
+        index++;
+
+        // giữ 4 giây rồi mới chuyển
+        setTimeout(showNextMessage, 4000);
+
+    }, 500);
+}
+
+// bắt đầu chạy
+showNextMessage();
+
+startBtn.onclick = function(){
+    startBtn.style.display="none";
+    preMessage.style.display="none";
+    document.getElementById("container").style.pointerEvents = "auto";
+    document.getElementById("container").style.opacity = "1";
+};
+
+
+</script>
+
+<style>
+@keyframes shake{
+0%{transform:translate(8px,8px)}
+25%{transform:translate(-8px,8px)}
+50%{transform:translate(-8px,-8px)}
+75%{transform:translate(8px,-8px)}
+100%{transform:translate(0,0)}
+}
+</style>
+
+</body>
+
+<!-- Trang giới thiệu -->
+<div id="introScreen" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:linear-gradient(135deg,#b30000,#ff0000);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+color:gold;
+text-align:center;
+">
+
+<h1 style="font-size:50px;text-shadow:0 0 20px gold;">
+🧧 LÌ XÌ DÀNH RIÊNG CHO THỎ 🧧
+</h1>
+
+<p style="font-size:20px;margin-top:10px;">
+Nhấn nút bên dưới để nhận điều bất ngờ 💖
+</p>
+
+<button onclick="enterSite()" style="
+margin-top:30px;
+padding:15px 40px;
+font-size:20px;
+border:none;
+border-radius:30px;
+background:gold;
+color:#b30000;
+cursor:pointer;
+box-shadow:0 0 20px yellow;
+transition:0.3s;
+">
+💎 Vào Mở Lì Xì 💎
+</button>
+
+</div>
+
+</html>
